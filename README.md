@@ -1,89 +1,62 @@
 # grunt-lisp.js
 
-> Transpile lisp to JS
+> [Transpile lisp to JS](https://github.com/JavaNut13/lisp.js) with Grunt
 
 ## Getting Started
-This plugin requires Grunt `~0.4.5`
 
-If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
+Read the Grunt [getting started guide](http://gruntjs.com/getting-started). Add the dependecy to your `package.json`:
 
-```shell
-npm install grunt-lisp.js --save-dev
+```json
+"devDependencies": {
+  "@javanut13/grunt-lisp.js": "0.0.3",
+  "grunt": "^0.4.5"
+}
 ```
 
-Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
+Add the task config in your `Gruntfile`:
 
-```js
-grunt.loadNpmTasks('grunt-lisp.js');
+```javascript
+lisp_js: {
+  options: {
+    extension: 'lsp',
+    cut: 'src/',
+    extend: require('./test/extend')
+  },
+  src: [
+    'src/**/*.lsp'
+  ],
+  dest: 'build/'
+},
 ```
 
-## The "lisp_js" task
+All the files in the `src` will be transpiled and output to the `dest` folder in the same structure as the input. If the exension of the file matches the `extension` option it will be removed from the filename before adding `.js`. The `cut` option lets you remove a part of the path when outputting to the destination.
 
-### Overview
-In your project's Gruntfile, add a section named `lisp_js` to the data object passed into `grunt.initConfig()`.
+The Lisp.js generator can be extended with custom functions. A function should be passed in that will be used to add definitions to the language. These can obviously be in a separate file and `require`-ed. For example:
 
-```js
-grunt.initConfig({
-  lisp_js: {
+```javascript
+module.exports = function(lisp) {
+  lisp.extend('not', function(items) {
+    return '(!' + this.get(items[0]) + ')';
+  });
+}
+```
+
+## Watch
+
+You can use [watch](https://github.com/gruntjs/grunt-contrib-watch) to run Lisp.js whenever you edit a lisp file:
+
+```javascript
+watch: {
+  scripts: {
+    files: ['src/**/*.lsp'],
+    tasks: ['lisp_js'],
     options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
+      spawn: false,
     },
   },
-});
+}
+...
+grunt.loadNpmTasks('grunt-contrib-watch');
 ```
 
-### Options
-
-#### options.separator
-Type: `String`
-Default value: `',  '`
-
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
-
-### Usage Examples
-
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  lisp_js: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  lisp_js: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
-
-## Release History
-_(Nothing yet)_
+Then run `grunt watch` and `nodemon build/server.js` ([nodemon](https://github.com/remy/nodemon)) to auto-restart the server when the files are transpiled.
