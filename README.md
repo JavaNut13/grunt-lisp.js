@@ -27,6 +27,8 @@ lisp_js: {
   ],
   dest: 'build/'
 },
+...
+grunt.loadNpmTasks('@javanut13/grunt-lisp.js');
 ```
 
 All the files in the `src` will be transpiled and output to the `dest` folder in the same structure as the input. If the exension of the file matches the `extension` option it will be removed from the filename before adding `.js`. The `cut` option lets you remove a part of the path when outputting to the destination.
