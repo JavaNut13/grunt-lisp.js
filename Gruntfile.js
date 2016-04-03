@@ -38,7 +38,8 @@ module.exports = function(grunt) {
       },
       custom_options: {
         options: {
-          cut: 'test/res/'
+          cut: 'test/res/',
+          extend: require('./test/extend')
         },
         src: [
           'test/res/**/*'

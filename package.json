@@ -34,7 +34,7 @@
     "grunt-contrib-nodeunit": "^0.3.3"
   },
   "dependencies": {
-    "@javanut13/lisp.js": "~0.0.3"
+    "@javanut13/lisp.js": "~0.1.0"
   },
   "keywords": [
     "gruntplugin"

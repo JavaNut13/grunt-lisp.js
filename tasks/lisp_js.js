@@ -20,6 +20,11 @@ module.exports = function(grunt) {
     var options = this.options({
       extension: 'lsp',
     });
+    
+    // If an include file was given, run it and pass in lispjs so it can extend
+    if(options.extend) {
+      options.extend(lispjs);
+    }
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
